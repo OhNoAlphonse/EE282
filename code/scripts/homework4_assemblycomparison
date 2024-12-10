@@ -1,0 +1,59 @@
+#!/bin/bash
+set -x        # Enable verbose debugging
+
+# Define input files
+hifiasm_assembly="/data/homezvol2/krraygoz/myrepos/ee282/data/processed/ISO1_assembly.bp.p_ctg.fasta"
+dmel_reference="/data/homezvol2/krraygoz/myrepos/ee282/code/scripts/dmel-all-chromosome-r6.48.fasta"
+
+# Process HiFiASM assembly
+cat $hifiasm_assembly \
+| tee >(faSize -detailed /dev/stdin \
+    | sort -rnk 2,2 \
+    | tee ../../data/processed/hifi-asm.scaff.sorted.namesizes.txt \
+    | cut -f 2 > ../../data/processed/hifi-asm.scaff.sorted.sizes.txt) \
+| faSplitByN /dev/stdin /dev/stdout 10 \
+| tee >(gzip -cf > ../../data/raw/hifi-asm.ctg.fa.gz) \
+| faSize -detailed /dev/stdin \
+    | sort -rnk 2,2 \
+    | tee ../../data/processed/hifi-asm.ctg.sorted.namesizes.txt \
+    | cut -f 2 > ../../data/processed/hifi-asm.ctg.sorted.sizes.txt
+
+# Process FlyBase reference genome
+cat $dmel_reference \
+| tee >(faSize -detailed /dev/stdin \
+    | sort -rnk 2,2 \
+    | tee ../../data/processed/dmel-r6.48.scaff.sorted.namesizes.txt \
+    | cut -f 2 > ../../data/processed/dmel-r6.48.scaff.sorted.sizes.txt) \
+| faSplitByN /dev/stdin /dev/stdout 10 \
+| tee >(gzip -c > ../../data/raw/dmel-r6.48.ctg.fa.gz) \
+| faSize -detailed /dev/stdin \
+    | sort -rnk 2,2 \
+    | tee ../../data/processed/dmel-r6.48.ctg.sorted.namesizes.txt \
+    | cut -f 2 > ../../data/processed/dmel-r6.48.ctg.sorted.sizes.txt
+
+# Combine sizes into a single file
+echo -e "Assembly\tLength" > combined_sizes.txt
+awk '{print "HiFiASM\t" $0}' ../../data/processed/hifi-asm.scaff.sorted.sizes.txt >> combined_sizes.txt
+awk '{print "Ref_Scaff\t" $0}' ../../data/processed/dmel-r6.48.scaff.sorted.sizes.txt >> combined_sizes.txt
+awk '{print "Ref_Ctg\t" $0}' ../../data/processed/dmel-r6.48.ctg.sorted.sizes.txt >> combined_sizes.txt
+
+# Generate the CDF plot
+~/bin/plotCDF combined_sizes.txt output/figures/HiFiASM_vs_Ref_CDF.png
+
+#Eveyrthing works except for the plot. When I use combined_sizes.txt I get an error that says that duplicate row names are not allowed
+#I added a colimn and numbered it = combined_sizes_numbered.txt and when I use that for the plot, the error says the there are more columns than column names
+#I even edited plotCDF to read the table differently and it still didn't work :(
+#I wonder if this would have worked if I used plotCDF2? but i was unable to get it
+#I spent like 7 hours just on this one plot and I unfortunately must give up and move on
+
+
+##Compleasm 
+
+#activate environment (yes I spelled compleasm wrong when i created the environment, oops)
+conda activate compleasom
+
+#compare assemblies
+compleasm miniprot -a /data/homezvol2/krraygoz/myrepos/ee282/data/processed/ISO1_assembly.bp.p_ctg.fasta \
+> -p /data/homezvol2/krraygoz/myrepos/ee282/code/scripts/dmel-all-chromosome-r6.48.fasta \
+> -o dmel_lineage 2> miniprot.log
+
