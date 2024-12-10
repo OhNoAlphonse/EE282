@@ -1,5 +1,18 @@
 ## C files
 
+# added by me
+hifiasm/
+mb_downloads/
+output/
+code/scripts/output/
+*tar.gz
+*.fasta
+Porechop/
+Filtlong/
+mummer-4.0.0rc1
+*.gfa
+
+
 # Prerequisites
 *.d
 
@@ -477,7 +490,7 @@ $RECYCLE.BIN/
 .LSOverride
 
 # Icon must end with two \r
-Icon
+Icon
 
 # Thumbnails
 ._*
