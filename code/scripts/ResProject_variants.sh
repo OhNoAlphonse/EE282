@@ -14,10 +14,16 @@ Set e-
 #Mamba install mummer
 
 #use nucmer to align sequences
-nucmer --prefix=IJONaive_vs_IJOLarge IJONaive_simplified.fasta IJOLarge_simplified.fasta
+#nucmer --prefix=IJONaive_vs_IJOLarge IJONaive_simplified.fasta IJOLarge_simplified.fasta
+
+
+#this worked!!!
 
 #filter the alignments to focus on regions of interest
-delta-filter -r -q IJONaive_vs_IJOLarge.delta > IJONaive_vs_IJOLarge.filtered.delta
+#delta-filter -r -q IJONaive_vs_IJOLarge.delta > IJONaive_vs_IJOLarge.filtered.delta
+
+
+#This worked!! 
 
 #use show-snps to create a variant list of SNPS and other variations
 show-snps -Clr IJONaive_vs_IJOLarge.filtered.delta > IJONaive_vs_IJOLarge.snps
