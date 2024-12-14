@@ -31,9 +31,9 @@ set -e
 #awk '/^>/ {if (seq) print seq; print ">seq" ++i; seq=""} /^[^>]/ {seq=seq$0} END {print seq}' IJOSmall_NoMetadata.fasta > IJOSmall_renamed.fasta
 
 #Naive vs Large on the simplified data :)
-#progressiveMauve --output=myrepos/ee282/output/pmauve/IJONaive_vs_Large/alignment.xmfa IJONaive_simplified.fasta IJOLarge_simplified.fasta
-progressiveMauve --output=ee282/output/pmauve/IJONaive_vs_Small/alignment.xmfa IJONaive_simplified.fasta IJOSmall_simplified.fasta
-progressiveMauve --output=/output/pmauve/IJOSmall_vs_Large/alignment.xmfa IJOSmall_simplified.fasta IJOLarge_simplified.fasta
+progressiveMauve --output=myrepos/ee282/output/pmauve/IJONaive_vs_Large/alignment.xmfa IJONaive_simplified.fasta IJOLarge_simplified.fasta
+#progressiveMauve --output=ee282/output/pmauve/IJONaive_vs_Small/alignment.xmfa IJONaive_simplified.fasta IJOSmall_simplified.fasta
+#progressiveMauve --output=/output/pmauve/IJOSmall_vs_Large/alignment.xmfa IJOSmall_simplified.fasta IJOLarge_simplified.fasta
 
 
 
